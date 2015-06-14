@@ -1,6 +1,7 @@
 # Reproducible Research: Peer Assessment 1
 
 
+
 ## Loading and preprocessing the data
 
 The assumption is made that the activity file has been downloaded and the working directory is set to where the data file is saved.
@@ -47,7 +48,7 @@ The data is read and the data rows that are not complete are removed.
         col = c("red"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+![](figure/unnamed-chunk-3-1.png) 
 
 The mean of the total number of steps taken per day is calculated as follows.
 
@@ -91,7 +92,7 @@ Then a time series plot is generated.
         col = "blue")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+![](figure/unnamed-chunk-6-1.png) 
 
 2.) Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
@@ -152,7 +153,7 @@ The total number of rows with NA's is 2304
         col = c("green"))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+![](figure/unnamed-chunk-11-1.png) 
 
 The mean and median of the total number of steps taken per day is calculated as follows.
 
@@ -207,6 +208,6 @@ names(stepsByDay) <- c("interval", "weekday", "steps")
     xlab = "Interval", ylab = "Number of steps")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
+![](figure/unnamed-chunk-14-1.png) 
 
 Looking at the plots we note that people have more movement over the weekend over the weekdays.

@@ -1,13 +1,9 @@
----
-output:
-  html_document:
-    keep_md: yes
----
+
 # Reproducible Research: Peer Assessment 1
 
 
 ```{r setup, cache=FALSE, include=FALSE}  
-library(knitr)  
+library(knitr)
 opts_chunk$set(fig.path='figure/')  
 ```
 ## Loading and preprocessing the data
@@ -35,7 +31,7 @@ The data is read and the data rows that are not complete are removed.
 
 2.) The histogram uses the the data generated in the above step to plot the steps taken per day
 
-```{r, fig.show='asis'}
+```{r}
    hist(aggActivity$steps,
         xlab = "Total Steps Per Day",
         ylab = "Number of Days",
