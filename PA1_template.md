@@ -1,16 +1,12 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
 The assumption is made that the activity file has been downloaded and the working directory is set to where the data file is saved.
 The data is read and the data rows that are not complete are removed.
-```{r}
+
+```r
    activityFile <- "activity.csv"
    if(file.exists(activityFile)) {
      activity <- read.csv(file=activityFile, sep=",", header=TRUE, skipNul=TRUE )
@@ -22,16 +18,28 @@ The data is read and the data rows that are not complete are removed.
    }
 ```
 
+```
+## 'data.frame':	15264 obs. of  3 variables:
+##  $ steps   : int  0 0 0 0 0 0 0 0 0 0 ...
+##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
+
+```
+## Loading required package: lattice
+```
+
 ## What is mean total number of steps taken per day?
 1.) The total number of steps taken per day is calculated using the aggregate function
-```{r}
-   aggActivity <- aggregate(formula = steps ~ date, data = activity.ignore.na, FUN=sum)
 
+```r
+   aggActivity <- aggregate(formula = steps ~ date, data = activity.ignore.na, FUN=sum)
 ```
 
 2.) The histogram uses the the data generated in the above step to plot the steps taken per day
 
-```{r}
+
+```r
    hist(aggActivity$steps,
         xlab = "Total Steps Per Day",
         ylab = "Number of Days",
@@ -39,14 +47,26 @@ The data is read and the data rows that are not complete are removed.
         col = c("red"))
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
 The mean of the total number of steps taken per day is calculated as follows.
-```{r}
+
+```r
    mean(aggActivity$steps)
 ```
 
+```
+## [1] 10766.19
+```
+
 The median of the total number of steps taken per day is calculated as follows.
-```{r}
+
+```r
    median(aggActivity$steps)
+```
+
+```
+## [1] 10765
 ```
 
 The mean is 10766.19 and the median is 10765
@@ -58,7 +78,8 @@ The mean is 10766.19 and the median is 10765
 First create a dataset that caclulates the average number of steps taken across each day for a given interval.
 
 Then a time series plot is generated.
-```{r}
+
+```r
    steps_per_interval <- aggregate(data=activity.ignore.na, steps ~ interval, FUN=mean)
 
    plot(x=steps_per_interval$interval,
@@ -70,22 +91,27 @@ Then a time series plot is generated.
         col = "blue")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
+
 2.) Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
-```{r}
+
+```r
    max_interval <- steps_per_interval[which.max(steps_per_interval$steps),]
 ```
 835 is the 5-minute interval and the maximum number of steps taken are approximately 206 steps.
 
 ## Imputing missing values
 1.) What are the toatl number of rows with NA's. 
-```{r}
+
+```r
    activity_NA <- sum(is.na(activity))
 ```
 The total number of rows with NA's is 2304
 
 2.) We fill the missing values with average number of steps taken across each day for a given interval.
 
-```{r}
+
+```r
    fillNA <- numeric() 
    for(i in 1:nrow(activity)){
        rowData <- activity[i,]
@@ -99,16 +125,24 @@ The total number of rows with NA's is 2304
 ```
 
 3.) A new dataset that is equal to the original dataset but with the missing data filled in is created
-```{r}
+
+```r
    new_activity <- activity
    new_activity$steps <- fillNA
 
    str(new_activity)
+```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : num  1.717 0.3396 0.1321 0.1509 0.0755 ...
+##  $ date    : Date, format: "2012-10-01" "2012-10-01" ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
 ```
 
 4.) A histogram of the total number of steps taken each day is drawn.
-```{r}
+
+```r
    aggActivity2 <- aggregate(formula = steps ~ date, data = new_activity, FUN=sum)
    
    hist(aggActivity2$steps,
@@ -116,13 +150,26 @@ The total number of rows with NA's is 2304
         ylab = "Number of Days",
         main = "Frequency of Total Steps in a day",
         col = c("green"))
-
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+
 The mean and median of the total number of steps taken per day is calculated as follows.
-```{r}
+
+```r
    mean(aggActivity2$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
    median(aggActivity2$steps) 
+```
+
+```
+## [1] 10766.19
 ```
 The mean and the median are the same 10766.19 steps.
 
@@ -131,7 +178,8 @@ The mean and the median are the same 10766.19 steps.
 1.) A new factor variable in the dataset with two levels - "weekday" and "weekend" indicating whether a given date is a weekday or weekend day is created.
 
 To get what day it is we used the weekdays function. And depending if it is is a Saturday or Sunday then we assign the daytype to a Weekend else assign it to a Weekday
-```{r}
+
+```r
    day <- weekdays(new_activity$date)
    daytype <- vector()
    for(i in 1:nrow(new_activity)) {
@@ -150,13 +198,15 @@ To get what day it is we used the weekdays function. And depending if it is is a
 
 A panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). First the data is massaged accordingly. And then an xyplot is created.
 
-```{r}
 
+```r
    stepsByDay <- aggregate(steps ~ interval + weekday, data = weekday_data, mean)
 names(stepsByDay) <- c("interval", "weekday", "steps")
 
    xyplot(steps ~ interval | weekday, stepsByDay, type = "l", layout = c(1, 2), 
     xlab = "Interval", ylab = "Number of steps")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
 
 Looking at the plots we note that people have more movement over the weekend over the weekdays.
